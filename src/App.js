@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
+import { chatGPTResponse } from './api';
 
-const socket = io('http://localhost:3001');
+const socket = io('http://localhost:4001');
 
 function App() {
   const [messages, setMessages] = useState([]);
@@ -13,8 +14,10 @@ function App() {
     });
   }, [messages]);
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     socket.emit('message', newMessage);
+    let response = await chatGPTResponse(newMessage)
+    console.log(response, "RESPONSE");
     setNewMessage('');
   };
 
