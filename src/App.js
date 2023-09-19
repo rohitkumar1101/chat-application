@@ -7,17 +7,21 @@ const socket = io('http://localhost:4001');
 function App() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [newReply, setNewReply] = useState('')
 
-  useEffect(() => {
-    socket.on('message', (message) => {
-      setMessages([...messages, message]);
-    });
-  }, [messages]);
+  // useEffect(() => {
+  //   console.log("UE");
+  //   socket.on('message', (message) => {
+  //     setMessages([...messages, message]);
+  //   });
+  // }, [messages]);
 
   const sendMessage = async () => {
     socket.emit('message', newMessage);
     let response = await chatGPTResponse(newMessage)
-    console.log(response, "RESPONSE");
+    console.log(response[0]?.message.content, "RESPONSE");
+    setNewReply(response[0]?.message.content)
+    setMessages([...messages, response[0]?.message.content]);
     setNewMessage('');
   };
 
